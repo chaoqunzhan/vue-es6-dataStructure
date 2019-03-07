@@ -5,7 +5,9 @@
    <ul>Array after modify bubbleSort: {{array3}}</ul>
    <ul>Array after selectSort: {{array4}}</ul>
    <ul>Array after insertSort: {{array5}}</ul>
-   <!-- <ul>Array after mergeSort: {{array6}}</ul> -->
+   <ul>Array after mergeSort: {{array6}}</ul>
+   <ul>Array after quickSort: {{array7}}</ul>
+   <ul><button @click="go">点我跳转</button></ul>
   </div>
 </template>
 
@@ -19,7 +21,8 @@ export default {
       array3: '',
       array4: '',
       array5: '',
-      // array6: ''
+      array6: '',
+      array7: ''
     }
   },
   created:function(){
@@ -29,7 +32,8 @@ export default {
     this.modBubbleSort();
     this.selectSort();
     this.insertSort();
-    // this.mergeSort();
+    this.mergeSort();
+    this.quickSort();
   },
   methods: {
     swap(a,b,arr){
@@ -93,37 +97,73 @@ export default {
       this.array5 = arr;
     },
 
-    // mergeSort(){
-    //   let arr = this.array1;
-    //   this.array6 = this.mergeSortRec(arr);
-    // },
+    merge(left,right){
+      let res = [];
+      while(left.length>0 && right.length>0){
+        let x = left.shift(), y = right.shift();
+        if(x<=y){
+          res.push(x); right.unshift(y);
+        } else{
+          res.push(y); left.unshift(x);
+        }
+      }
+      if(left.length == 0){
+        return res.concat(right);
+      }else{
+        return res.concat(left);
+      }
+    },
+    mergeSortRec(arr){
+      if(arr.length===1){
+        return arr;
+      }
+      let mid = arr.length/2;
+      let left = arr.slice(0,mid);
+      let right = arr.slice(mid,arr.length);
+      return this.merge(this.mergeSortRec(left),this.mergeSortRec(right))
+    },
+    mergeSort(){
+      let arr = this.array1;
+      this.array6 = this.mergeSortRec(arr);
+    },
 
-    // mergeSortRec(arr){
-    //   if(arr.length===1){
-    //     return arr;
-    //   }
-    //   let mid = arr.length/2;
-    //   let left = array(0,mid);
-    //   let right = array(mid,arr.length);
-    //   return this.merge(mergeSortRec(left),mergeSortRec(right))
-    // },
+    quickSortRec(arr,from,to){
+      let Arr;
+      let i = from, j = to;
+      let temp = arr[i];
+      if(from >= to){
+        return;
+      }
+      while(i<j){
+        while(arr[j]>temp && i<j){
+          j--;
+        }
+        while(arr[i]<=temp &&i<j){
+          i++;
+        }
+        if(i<j){
+          let c = arr[i];
+          arr[i] = arr[j];
+          arr[j] = c;
+        }
+      }
+      // console.log(arr);
+      arr[from] = arr[i];
+      arr[i] = temp;
+      this.quickSortRec(arr,from,i-1);
+      this.quickSortRec(arr,i+1,to);
+    },
 
-    // merge(left,right){
-    //   let res = [];
-    //   while(left.length>0 && right.length>0){
-    //     let x = left.shift(), y = right.shift();
-    //     if(x<=y){
-    //       res.push(x); right.unshift(y);
-    //     } else{
-    //       res.push(y); left.unshift(x);
-    //     }
-    //   }
-    //   if(left.length == 0){
-    //     return res.concat(right);
-    //   }else{
-    //     return res.concat(left);
-    //   }
-    // }
+    quickSort(){
+      let arr = this.array1;
+      this.quickSortRec(arr,0,arr.length-1);
+      // console.log(arr)
+      this.array7 = arr;
+    },
+
+    go(){
+      this.$router.push('/jsJC');
+    }
   }
 }
 </script>
