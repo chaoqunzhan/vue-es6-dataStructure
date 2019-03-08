@@ -8,45 +8,88 @@
 <meta name="keywords" content="">
 <link href="" rel="stylesheet">
 <style type="text/css">
-	#box{width:400px;height:300px;background:#278;position:absolute;}
+	#box1{width:400px;height:300px;background:#278;position:absolute;}
+	#box2{left:500px;width:400px;height:300px;background:#678;position:absolute;}
 </style>
 </head>
 <body>
-    <div id='box'></div>
+    <div id='box1'></div>
+    <div id='box2'></div>
 </body>
 
 
 <script type="text/javascript">
 
-var oBox = document.getElementById('box');
+window.onload = function(){
+	new Drag('box1');
 
-oBox.onmousedown = function(ev){
-// 鼠标按下
-	// console.log('helloworld')
-	var ev = ev || event;
-
-	// 获取鼠标离div得距离
-	var mouseBoxleft = ev.clientX - this.offsetLeft;
-	var mouseBoxTop = ev.clientY - this.offsetTop;
-
-	oBox.onmousemove = function(ev){
-		// 鼠标按下左键并移动    
-
-		var ev = ev || event;
-
-		// 设置div移动时，它的位置
-		oBox.style.left = ev.clientX - mouseBoxleft + 'px';
-		oBox.style.top = ev.clientY - mouseBoxleft + 'px';
-
+	function DragLimit(id){
+		Drag.call(this,id) //jicheng  shuxing 
 	}
-
-	oBox.onmouseup = function(){
-	// 鼠标左键抬起    
-
-		oBox.onmousemove = oBox.onmouseup = null;
+	for(var i in Drag.prototype){
+		DragLimit.prototype[i] = Drag.prototype[i];
+		DragLimit('box2');
 	}
+} 
 
-}
+function Drag(id)
+{
+	var _this=this;
+	this.disX=0;
+	this.disY=0;
+	
+	this.oDiv=document.getElementById(id);
+	this.oDiv.onmousedown=function (ev)
+	{
+		_this.fnDown(ev);
+		
+		return false;
+	};
+};
+
+Drag.prototype.fnDown=function (ev)
+{
+	var _this=this;
+	var oEvent=ev||event;
+	
+	this.disX=oEvent.clientX-this.oDiv.offsetLeft;
+	this.disY=oEvent.clientY-this.oDiv.offsetTop;
+	
+	document.onmousemove=function (ev)
+	{
+		_this.fnMove(ev);
+	};
+	document.onmouseup=function ()
+	{
+		_this.fnUp();
+	};
+};
+
+Drag.prototype.fnMove=function (ev)
+{
+	var oEvent=ev||event;
+	
+	this.oDiv.style.left=oEvent.clientX-this.disX+'px';
+	this.oDiv.style.top=oEvent.clientY-this.disY+'px';
+};
+
+Drag.prototype.fnUp=function ()
+{
+	document.onmousemove=null;
+	document.onmouseup=null;
+};
+
+// var id = 'box1';
+// Drag(id);
+
+// function dragLimit(){
+// }
+// dragLimit.prototype = new dragPerson();
+// var id = 'box2';
+// dragLimit(id);
+
+
+
 </script>
 
 
