@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>leetCode_3</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<link href="" rel="stylesheet">
+</head>
+<body>
+<script type="text/javascript">
+	function engthOfLongestSubstring(s){
+		var res = new Array;
+		var result = new Array;
+		let left = 0, right = 1;
+		for (let i=0; i<s.length; i++){
+			var temp = judgeResult(res,s[i]);
+			console.log("temp:"+temp);
+			if(!temp){
+				res.push(s[i]);
+				right++;
+				result = res;console.log(result);
+			}else{
+				left = temp+1;
+				res = s.slice(left,right);
+				if(res.length>result.length){
+					result = res;
+				}
+				console.log("hello");
+			}
+		}
+		console.log(result);
+	}
+	function judgeResult(res,char){
+		let judgeTemp;
+		for (let j=0; j<res.length; j++){
+			if(char==res[j]){
+				judgeTemp = j;
+			}else{
+				judgeTemp = false;
+			}
+		}
+		return judgeTemp;
+	}
+	// var s = "abcabcbb";
+	var s = "bb"
+	engthOfLongestSubstring(s)
+</script>
+</body>
+</html>
