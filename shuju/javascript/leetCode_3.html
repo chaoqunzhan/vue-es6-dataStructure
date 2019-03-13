@@ -11,41 +11,52 @@
 <body>
 <script type="text/javascript">
 	function engthOfLongestSubstring(s){
-		var res = new Array;
-		var result = new Array;
-		let left = 0, right = 1;
+		var res = '';
+		var result = '';
+		let left = 0;
 		for (let i=0; i<s.length; i++){
 			var temp = judgeResult(res,s[i]);
 			console.log("temp:"+temp);
-			if(!temp){
-				res.push(s[i]);
-				right++;
-				result = res;console.log(result);
-			}else{
-				left = temp+1;
-				res = s.slice(left,right);
+			if(temp==-1){
+				console.log("s[i]:"+s[i]);
+				res = res+s[i];
 				if(res.length>result.length){
 					result = res;
 				}
-				console.log("hello");
+				console.log("result1:"+result,"res1:"+res);
+			}else{
+				left = temp+1;
+				console.log("left:"+left);
+				res = res+s[i];
+				console.log(res);
+				res = res.slice(left,res.length);
+				if(res.length>result.length){
+					result = res;
+				}
+				console.log("result2:"+result,"res2:"+res);
 			}
 		}
-		console.log(result);
+		return result;
+		// console.log(result);
 	}
 	function judgeResult(res,char){
-		let judgeTemp;
+		let judgeTemp = -1;
 		for (let j=0; j<res.length; j++){
 			if(char==res[j]){
+				console.log("char==res[j]:"+(char==res[j]));
 				judgeTemp = j;
+				return judgeTemp;
 			}else{
-				judgeTemp = false;
+				judgeTemp = -1;
 			}
 		}
+		console.log("judgeTemp:"+judgeTemp)
 		return judgeTemp;
 	}
 	// var s = "abcabcbb";
-	var s = "bb"
-	engthOfLongestSubstring(s)
+	var s = "bbbbbhsjd"
+	var re = engthOfLongestSubstring(s);
+	console.log("re:"+re);
 </script>
 </body>
 </html>
