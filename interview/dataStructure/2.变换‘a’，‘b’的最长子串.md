@@ -1,0 +1,95 @@
+## 题目描述：
+
+有一个仅包含’a’和’b’两种字符的字符串s，长度为n，每次操作可以把一个字符做一次转换（把一个’a’设置为’b’，或者把一个’b’置成’a’)；但是操作的次数有上限m，问在有限的操作数范围内，能够得到最大连续的相同字符的子串的长度是多少。
+
+## 输入描述:
+
+第一行两个整数 n , m (1<=m<=n<=50000)，第二行为长度为n且只包含’a’和’b’的字符串s。
+
+## 输出描述:
+
+输出在操作次数不超过 m 的情况下，能够得到的 最大连续 全’a’子串或全’b’子串的长度。
+
+
+## 示例1
+
+**输入**
+
+    9 1
+    aabaabaaa
+
+**输出**
+
+    6
+
+## 说明：
+把第一个 'b' 或者第二个 'b' 置成 'a'，可得到长度为 5 的全 'a' 子串。
+
+
+## 解题思路：
+1、先遍历出所有的“a”的位置（索引）和所有的"b"的位置（索引）,分别存入数组aIndex和bIndex中，此时：
+
+    aIndex=[0,1,3,4,6,7,8];
+    bIndex=[2,5];
+
+2、如果翻转"b",就对bIndex操作：因为m=1，所以首先翻转原字符串的Str[2]，得到的子串为Str[0-4]；接着翻转原字符串的Str[5]，得到的子串Str[3-9]；
+然后比较Str[0-4]和Str[3-9]的长度，取较长的；
+
+3、为了计算上一步中的Str[0-4]和Str[3-9]的长度，对aInde和bIndex进行改造，在其头尾分别加上-1和n，得到：
+
+    aIndex=[-1,0,1,3,4,6,7,8,9];
+    bIndex=[-1,2,5,9];
+这时候计算子串长度(bDiff)可以统一为:
+
+    bDiff = bIndex[i]-1-bIndex[i-m-1]
+    //这道题中i=3,4;也就是i从bIndex[m+1]开始
+4、对“a”翻转也是执行类似的操作；
+5、最后比较对"a"翻转和对“b”翻转操作得到的最长子串长度，输出大的就是答案；
+
+## javascript代码实现：
+
+    var lines = new Array(); 
+    while(line=readline()){
+        lines.push(line); 
+    } 
+    let mn = lines[0].split(' ') 
+    let Str = lines[1].split(' ')[0]; 
+    let n = parseInt(mn[0]); 
+    let m = parseInt(mn[1]);//get输入数据
+    
+    var aIndex = new Array(), 
+        bIndex = new Array(); 
+    aIndex.push(-1); 
+    bIndex.push(-1);
+    
+    for (var i=0; i<Str.length; i++){ 
+        if(Str[i]=='a'){ 
+            aIndex.push(i) 
+        }else{ 
+            bIndex.push(i) 
+        } 
+    }
+    aIndex.push(n); 
+    bIndex.push(n);
+    
+    var bMax = 0;
+    for (var i=m+1; i<bIndex.length; i++){ 
+        var bDiff = bIndex[i]-1-bIndex[i-m-1] 
+        bMax<bDiff? bMax=bDiff:bMax=bMax; 
+    } 
+    
+    var aMax = 0;
+    for (var i=m+1; i<aIndex.length; i++){ 
+        var aDiff = aIndex[i]-1-aIndex[i-m-1] 
+        aMax<aDiff? aMax=aDiff:aMax=aMax; 
+    } 
+    
+    aMax<bMax?console.log(bMax):console.log(aMax);
+
+## 复杂度分析：
+时间复杂度应该是多项式型O(n+n/2),可能吧！不确定
+运行时间：31ms
+占用内存：7244k
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbMTEyODE5MjUwMl19
+-->
