@@ -27,7 +27,7 @@ function Graph(){
 	var adjList = new Dictionary();
 
 	this.addVertex = function(v){
-		console.log('addVertex');
+		//console.log('addVertex');
 		vertices.push(v);
 		adjList.set(v, []);
 	}
@@ -39,7 +39,7 @@ function Graph(){
 
 	this.toString = function(){
 		var s = '';
-		for(var i=0; i<vertices.lenght; i++){
+		for(var i=0; i<vertices.length; i++){
 			s += vertices[i] + '->';
 			var neighbors = adjList.get(vertices[i]);
 			for(var j=0; j<neighbors.length; j++){
@@ -49,7 +49,78 @@ function Graph(){
 		}
 		return s;
 	}
+
+	//广度优先遍历
+	var initializeColor = function(){
+		var color = [];
+		for (var i=0; i<vertices.length; i++){
+			color[vertices[i]] = 'white';
+		}
+		return color;
+	}
+
+	this.bfs = function(v, callback){
+		var color = initializeColor();
+
+		var queue = [];
+		queue.push(v);
+
+		while(!queue.length==0){
+			//alert(queue.length);
+			var u = queue.shift();
+			var neighbors = adjList.get(u);
+			color[u] = 'grey';
+			//alert (neighbors);
+			for (var i=0; i<neighbors.length; i++){
+				var w = neighbors[i];
+				if(color[w] === 'white'){
+					color[w] = 'grey';
+					queue.push(w);
+				}
+			}
+			//alert ('queue:'+queue.length);
+			color[u] = 'black';
+			if(callback){
+				callback(u);
+			}
+		}
+	}
+
+	this.BFS = function(v){
+		var color = initializeColor(),
+		queue = [],
+		d = [],
+		pred = [];
+		queue.push(v);
+
+		for(var i=0; i<vertices.length; i++){
+			d[vertices[i]] = 0;
+			pred[vertices[i]] = null;
+		}
+
+		while(!queue.length == 0){
+			var u = queue.shift();
+			var neighbors = adjList.get(u);
+			color[u] = 'grey';
+			for (i=0; i<neighbors.length; i++){
+				var w = neighbors[i];
+				if(color[w] === 'white'){
+					color[w] = 'grey';
+					d[w] = d[u]+1;
+					pred[w] = u;
+					queue.push(w);
+				}
+			} 
+			color[u] = 'black';
+		}
+		return{
+			distance:d,
+			predecessers:pred
+		}
+	}
 }
+
+
 
 //创建实例
 var graph = new Graph();
@@ -68,7 +139,38 @@ graph.addEdge('B','E');
 graph.addEdge('B','F');
 graph.addEdge('E','I');
 
-console.log('garph:'+graph.toString());
+//console.log('garph:'+graph.toString());
+
+
+
+
+//bfs实例
+function printNode(value){
+	console.log('Visited vertex:'+value);
+}
+graph.bfs(myVertices[0],printNode);
+
+
+//BFS实例
+var shortestPathA = graph.BFS(myVertices[0]);
+console.log(shortestPathA);
+
+
+//搜索路径
+var fromVertex = myVertices[0];
+for (var i=1; i<myVertices.length; i++){
+	var toVertex = myVertices[i];
+	var path = [];
+	for (var v=toVertex; v!==fromVertex; v=shortestPathA.predecessers[v]){
+		path.push(v);
+	}
+	path.push(fromVertex);
+	var s = path.pop();
+	while(!path.length==0){
+		s += '-' + path.pop();
+	}
+	console.log(s)
+}
 </script>
 </body>
 </html>
