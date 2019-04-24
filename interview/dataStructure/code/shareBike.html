@@ -188,58 +188,58 @@ function Graph(){
 
 
 //创建实例
-// var graph = new Graph();
-// var myVertices = ['A','B','C','D','E','F','G','H','I'];
-// for(var i=0; i<myVertices.length; i++){
-// 	graph.addVertex(myVertices[i]);
-// }
-// graph.addEdge('A','B');
-// graph.addEdge('A','C');
-// graph.addEdge('A','D');
-// graph.addEdge('C','G');
-// graph.addEdge('C','D');
-// graph.addEdge('D','G');
-// graph.addEdge('D','H');
-// graph.addEdge('B','E');
-// graph.addEdge('B','F');
-// graph.addEdge('E','I');
+var graph = new Graph();
+var myVertices = ['A','B','C','D','E','F','G','H','I'];
+for(var i=0; i<myVertices.length; i++){
+	graph.addVertex(myVertices[i]);
+}
+graph.addEdge('A','B');
+graph.addEdge('A','C');
+graph.addEdge('A','D');
+graph.addEdge('C','G');
+graph.addEdge('C','D');
+graph.addEdge('D','G');
+graph.addEdge('D','H');
+graph.addEdge('B','E');
+graph.addEdge('B','F');
+graph.addEdge('E','I');
 
-// console.log('garph:'+graph.toString());
-
-
+console.log('garph:'+graph.toString());
 
 
-// //bfs实例
-// function printNode(value){
-// 	console.log('Visited vertex:'+value);
-// }
-// graph.bfs(myVertices[0],printNode);
 
 
-// //BFS实例
-// var shortestPathA = graph.BFS(myVertices[0]);
-// console.log(shortestPathA);
+//bfs实例
+function printNode(value){
+	console.log('Visited vertex:'+value);
+}
+graph.bfs(myVertices[0],printNode);
 
 
-// //搜索路径BFS
-// var fromVertex = myVertices[0];
-// for (var i=1; i<myVertices.length; i++){
-// 	var toVertex = myVertices[i];
-// 	var path = [];
-// 	for (var v=toVertex; v!==fromVertex; v=shortestPathA.predecessers[v]){
-// 		path.push(v);
-// 	}
-// 	path.push(fromVertex);
-// 	var s = path.pop();
-// 	while(!path.length==0){
-// 		s += '-' + path.pop();
-// 	}
-// 	console.log(s)
-// }
+//BFS实例
+var shortestPathA = graph.BFS(myVertices[0]);
+console.log(shortestPathA);
+
+
+//搜索路径BFS
+var fromVertex = myVertices[0];
+for (var i=1; i<myVertices.length; i++){
+	var toVertex = myVertices[i];
+	var path = [];
+	for (var v=toVertex; v!==fromVertex; v=shortestPathA.predecessers[v]){
+		path.push(v);
+	}
+	path.push(fromVertex);
+	var s = path.pop();
+	while(!path.length==0){
+		s += '-' + path.pop();
+	}
+	console.log(s)
+}
 
 
 // //dfs
-// graph.dfs(printNode);
+graph.dfs(printNode);
 
 //DFS
 var graph1 = new Graph();
