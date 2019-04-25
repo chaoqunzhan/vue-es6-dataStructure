@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<script type='text/javascript' src='https://cdn.jsdelivr.net/npm/vue'></script>
+	<meta charset="UTF-8">
+	<title>MVVM</title>
+</head>
+<body>
+	<div id='app'>
+		<h1>{{title}}</h1>
+		<ul>
+			<li  v-for="user in users">{{user.name}}</li>
+		</ul>
+		<input type="text" v-model="name" id="name-input">
+		<button v-on:click="addUser">添加用户</button>
+	</div>
+	<script type='text/javascript'>
+	// var model = {
+	// 	title : "vue.js的MVVM实现",
+	// 	users : [{name:"张良"},{name:"刘邦"},{name:"韩信"}]
+	// }
+
+	// var vue = new Vue({
+	// 	el : "#app",	//view
+	// 	data : model,	//model
+	// 	methods : {
+	// 		addUser : function(){
+	// 			this.users.push({name:""});
+	// 			this.name = ""
+	// 		}
+	// 	}
+	// });
+	// 
+	var model = {
+		titile : "test title"
+	};
+	Object.defineProperty(model, "title", {
+		get :function(){
+			console,log("调用了setter")
+		}
+
+		set :function(){
+			console,log("调用了setter")
+		}
+	}})
+
+	window.setTimeout(function(){
+		model.title="nihao "
+	},1000)
+	</script>
+</body>
+</html>
