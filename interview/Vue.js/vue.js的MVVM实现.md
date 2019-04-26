@@ -173,23 +173,12 @@ function reactiveMVVM(obj, key, val, customSetter){
 ```javascript
 >model.title = "我是新标题"		//输入
 <·"我是新标题"					//输出
-```VM监听V和M的改变
-
-# Vue的基本应用
+```
 
 
-
-
-# 属性定义器介绍
-
-
-
-
-
-# MVVM的实现
 
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTA1Njk4NjEyMiwxMTkxMzA0MDczXX0=
+eyJoaXN0b3J5IjpbLTE1MzAyMTU4NDUsMTE5MTMwNDA3M119
 -->
