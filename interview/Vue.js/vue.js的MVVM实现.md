@@ -7,9 +7,12 @@ B --> A
 B --> C[Model]
 C-->B
 ```
-**View**: 视图DOM	
-**ViewModel**: 通讯，观察者，监听View和Model的变化	
-**Model**: 数据，接口，javascript对象
+**View**: View（视图DOM）	
+**
+ViewModel**: （通讯，观察者，监听View和Model的变化	
+**）	
+
+Model**: （数据，接口，javascript对象）
 
 # Vue的基本应用
 这主要是一个简单的Vue例子。
@@ -170,7 +173,23 @@ function reactiveMVVM(obj, key, val, customSetter){
 ```javascript
 >model.title = "我是新标题"		//输入
 <·"我是新标题"					//输出
-```
+```VM监听V和M的改变
+
+# Vue的基本应用
+
+
+
+
+# 属性定义器介绍
+
+
+
+
+
+# MVVM的实现
+
+
+
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTE5MTMwNDA3M119
+eyJoaXN0b3J5IjpbMTA1Njk4NjEyMiwxMTkxMzA0MDczXX0=
 -->
