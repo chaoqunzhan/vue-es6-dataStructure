@@ -7,12 +7,12 @@
 </head>
 <body>
 	<div id='app'>
-		<h1>{{title}}</h1>
-		<ul>
-			<li  v-for="user in users">{{user.name}}</li>
-		</ul>
-		<input type="text" v-model="name" id="name-input">
-		<button v-on:click="addUser">添加用户</button>
+		<p id="title">{{title}}</p>
+<!-- 		<ul>
+			<li  v-for="user in users">{{title}}</li>
+		</ul> -->
+		<input type="text" v-model="title" id="title-input">
+		<!-- <button v-on:click="addUser">添加用户</button> -->
 	</div>
 	<script type='text/javascript'>
 	// var model = {
@@ -30,23 +30,103 @@
 	// 		}
 	// 	}
 	// });
+	
+	
+	// var model = {
+	// 	title : "初始标题"
+	// };
+	// console.log("title:"+model.title);
+	// var val = model.title;
+	// Object.defineProperty(model, "title", {
+	// 	get :function(){
+	// 		console.log("调用了getter");
+	// 		return val;
+	// 	},
+	// 	set :function(nval){
+	// 		console.log("调用了setter");
+	// 		val = nval;
+	// 	}
+	// })
+
+	// window.setTimeout(function(){
+	// 	model.title="改变标题";
+	// 	console.log("title:"+model.title);
+	// },1000)
+	
 	// 
-	var model = {
-		titile : "test title"
-	};
-	Object.defineProperty(model, "title", {
-		get :function(){
-			console,log("调用了setter")
-		}
+	// 
+	// (function (global, factory) {
+	// 	//common.js->node.js中的module和export
+	//   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+	//   typeof define === 'function' && define.amd ? define(factory) :
+	//   (global = global || self, global.Vue = factory());
+	  
+	//   //common.js node.js-->exports
+	//   //amd require.js-->define
+	//   //cmd sea.js-->define
+	// }(this, function () { 'use strict';
+	 
+	 
+// var input = document.getElementById("title-input");
+// console.log(input);	 
 
-		set :function(){
-			console,log("调用了setter")
-		}
-	}})
+var view = title;
+var model = {
+	titie: "test title"
+};
+reactiveMVVM(model,"title", model.title);
 
-	window.setTimeout(function(){
-		model.title="nihao "
-	},1000)
+function reactiveMVVM(obj, key, val, customSetter){
+	//getOwnPropertyDescriptor：获得obj对象的属性定义器
+	var property = Object.getOwnPropertyDescriptor(obj, key);
+    if (property && property.configurable === false) {
+      return
+    }
+
+    // cater for pre-defined getter/setters
+    var getter = property && property.get;
+    var setter = property && property.set;
+
+	Object.defineProperty(obj, key, {
+      enumerable: true,
+      configurable: true,
+      get: function reactiveGetter () {
+        var value = getter ? getter.call(obj) : val;
+        // if (Dep.target) {
+        //   dep.depend();
+        //   if (childOb) {
+        //     childOb.dep.depend();
+        //     if (Array.isArray(value)) {
+        //       dependArray(value);
+        //     }
+        //   }
+        //}
+        return value
+      },
+      set: function reactiveSetter (newVal) {
+        var value = getter ? getter.call(obj) : val;
+        /* eslint-disable no-self-compare */
+        if (newVal === value || (newVal !== newVal && value !== value)) {
+          return     //如果值没有改变就不通知视图
+        }
+        /* eslint-enable no-self-compare */
+        if (customSetter) {//客户自定义方法
+          customSetter();
+        }
+        // #7981: for accessor properties without setter
+        if (getter && !setter) { return }
+        if (setter) {
+          setter.call(obj, newVal);
+        } else {
+          val = newVal;
+        }
+        view.innerText = val;
+        // childOb = !shallow && observe(newVal);//wacther
+        // dep.notify();
+      }
+    });
+}
+
 	</script>
 </body>
 </html>
