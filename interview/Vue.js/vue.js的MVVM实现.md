@@ -12,6 +12,7 @@ C-->B
 **Model**: 数据，接口，javascript对象
 
 # Vue的基本应用
+这主要是一个简单的Vue例子。
 ```javascript
 <!DOCTYPE html>
 <html lang="en">
@@ -34,7 +35,7 @@ C-->B
 		title : "vue.js的MVVM实现",
 		users : [{name:"张良"},{name:"刘邦"},{name:"韩信"}]
 	}
-
+	
 	var vue = new Vue({
 		el : "#app",	//view
 		data : model,	//model
@@ -65,11 +66,13 @@ Object.defineProperty(obj, prop, descriptor)
 |-get|Function|取描述符|属性获得时的回调函数
 |-set|Function|存描述符|设置属性时的回调函数
 
+**尝试defineProperty的使用**
 ```javascript
 <script>	
 	var model = {
-		titile : "test title"
+		title : "初始标题"
 	};
+	console.log("title:"+model.title);
 	var val = model.title;
 	Object.defineProperty(model, "title", {
 		get :function(){
@@ -83,14 +86,28 @@ Object.defineProperty(obj, prop, descriptor)
 	})
 
 	window.setTimeout(function(){
-		model.title="尝试一下Object.defineProperty(obj, prop, descriptor)的用法";
-		console.log(model.title);
+		model.title="改变标题";
+		console.log("title:"+model.title);
 	},1000)
 </script>
 ```
-
+**输出结果：**
+```javascript
+title:初始标题
+调用了setter
+调用了getter
+title:改变标题
+```
 
 # MVVM的实现
+在Vue.js中，采用观察者-订阅者模式来进行双向数据绑定，通过Object.defineProperty()方法来劫持各个属性的setter，getter，在数据变动时发布消息给订阅者，触发相应的监听回调。
+
+首先，观察者会遍历 data 对象的所有属性，每个属性通过调用 `defineReactive` 方法，转换为getter/setter。defineReactive 方法将data的属性转换为访问器属性：  
+get时，进行依赖收集，  
+set时，如果数据有改变，则进行订阅通知。
+
+**下面就根据vue.js v2.6.10源码来实现MVVM**
+*本例中进行了精简，忽略发布者和订阅者的实现*
 ```javascript
 var view = title;
 var model = {
@@ -149,8 +166,11 @@ function reactiveMVVM(obj, key, val, customSetter){
     });
 }
 ```
-
-
+**控制台测试**
+```javascript
+>model.title = "我是新标题"		//输入
+<·"我是新标题"					//输出
+```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbOTE0NDk2NzM3XX0=
+eyJoaXN0b3J5IjpbMTE5MTMwNDA3M119
 -->
