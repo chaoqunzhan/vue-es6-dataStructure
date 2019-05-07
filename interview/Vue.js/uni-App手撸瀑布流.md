@@ -8,6 +8,9 @@
 ```
 
 使用 `uni.upx2px(Number)` 转换为 `px` 后再赋值。
+
+
+v-bind:style="{height:contentH+'px'}"
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTgyMDYzMjAwOV19
+eyJoaXN0b3J5IjpbNzEzNDQ3NzMyXX0=
 -->
