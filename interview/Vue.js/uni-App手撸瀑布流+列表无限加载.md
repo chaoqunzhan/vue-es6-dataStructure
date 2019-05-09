@@ -9,17 +9,22 @@
 ## 列表无限加载
 列表无限加载：当滚轮scroll滑到页面的底部，自动触发新的页面请求，加载更多的显示元素，省去了用户的翻页操作，这在各种APP中极为常见，用户体验极佳。
 
+# 实现逻辑：
+本例中采用两栏瀑布流布局，分别用数组cardListLeft和cardListRight储存左右两栏要显示的card（card表示显示的元素），cardLeftHeight 和cardRightHeight表示左右两栏的高度；
+ 每加载一张card，要进行自适应处理，计算显示的高度，然后把card加到栏高更低的一栏中，更新这一栏的高度；
+ 初始化时，加载4张card，并设置content的高度为客户端屏幕的高度，以实现触底加载更多。
+加载更多方法loadMore触发时，触发新的请求，获取接下来的四张card。以此直到
+没有更多card，就显示noMore。
+
+
 # 主要知识点：
 
-
-
-# 实现逻辑：
-本例中采用两栏瀑布流布局，
-
-
-# 代码实现：
-
-动态绑定的 style 不支持直接使用 upx.
+## 底部触发加载更多
+使用uni-App的[<scroll-view>](https://uniapp.dcloud.io/component/scroll-view)组件
+```javascript
+<scroll-view class="content" v-bind:style="{height:contentH+'px'}" scroll-y="true" @scrolltolower="loadMore" lower-threshold="10">
+```
+动态绑定的 style 不支持直接使用 upx。要使用 `uni.upx2px(Number)` 转换为 `px` 后再赋值。
 ```html
 <!-- - 静态upx赋值生效 -->
 <view class="test" style="width:200upx"></view>
@@ -27,102 +32,52 @@
 <view class="test" :style="{width:winWidth + 'upx;'}"></view>
 ```
 
-使用 `uni.upx2px(Number)` 转换为 `px` 后再赋值。
+## 获取图片的原始高度
+使用<image>组件的[@load](https://uniapp.dcloud.io/component/image)方法，当图片载入完毕时，发布到 AppService 的事件名，事件对象event.detail = {height:'图片高度px', width:'图片宽度px'}
+```javascript
+function(e){
+	let oImgW = e.detail.width; //图片原始宽度
+	let oImgH = e.detail.height; //图片原始高度
+}
+```
 
-
-v-bind:style="{height:contentH+'px'}"
-
+# 代码实现：
 
 ```html
-<template>
-	<view class="box" >
-		<view class="weui-search-bar">
-			<view class="weui-search-bar__form">
-				<view class="weui-search-bar__box">
-				  <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
-				  <input type="text" class="weui-search-bar__input" placeholder="请输入查询内容" :value="inputdefault" @input="onKeyInput"/>
-				  <view class="weui-icon-clear" wx:if="SearchData.value.length > 0" @click="SearchClear">
-					<icon type="clear" size="14"></icon>
-				  </view>
+<scroll-view class="content" v-bind:style="{height:contentH+'px'}" scroll-y="true" @scrolltolower="loadMore" lower-threshold="10">
+	<!--瀑布流布局start-->
+	<view class="new-list">
+		<view class="list-left">
+			<view class="card" v-for="(item,index) in cardListLeft">
+				<img :src="item.cardImg" alt="" mode="widthFix" width="100%" @load="onImageLoad">
+				<view class="card-text">
+					<h2>{{item.cardTitle}}</h2>
+					<p>{{item.cardText}}</p>
 				</view>
-			</view>
-			<view class="weui-search-bar__cancel-btn" @click="SearchConfirm">
-				 <text wx:if="SearchData.value.length>0" data-key='search'>搜索</text>
-				 <text wx:else data-key='back'>返回</text>
 			</view>
 		</view>
-		
-		<scroll-view class="content" v-bind:style="{height:contentH+'px'}" scroll-y="true" @scrolltolower="loadMore" lower-threshold="10">
-			<view class="bonner">
-				<swiper class="swiper" :indicator-dots=true :autoplay=true :interval=5000 :duration=500>
-					<swiper-item>
-						<img src="@/static/image/bonner/wxBg.jpg" alt="wxBg" >
-					</swiper-item>
-					<swiper-item>
-						<img src="@/static/image/bonner/qqBg.jpg" alt="qqBg">
-					</swiper-item>
-					<swiper-item>
-						<img src="@/static/image/bonner/weiboBg.jpg" alt="weiboBg">
-					</swiper-item>
-				</swiper>
-			</view>
-			<view class="item-mune">
-				<navigator url="navigate/navigate?title=navigate" hover-class="navigator-hover">
-					<img src="@/static/image/item-mune/shu_1.png" alt=""><p>课本</p>
-                </navigator>
-				<navigator url="navigate/navigate?title=navigate" hover-class="navigator-hover">
-					<img src="@/static/image/item-mune/IT.png" alt=""><p>IT</p>
-				</navigator>
-				<navigator url="navigate/navigate?title=navigate" hover-class="navigator-hover">
-					<img src="@/static/image/item-mune/zihangche.png" alt=""><p>自行车</p>
-				</navigator>
-				<navigator url="navigate/navigate?title=navigate" hover-class="navigator-hover">
-					<img src="@/static/image/item-mune/qita.png" alt=""><p>其他</p>
-				</navigator>
-			</view>
-			<view class="new-list">
-<!-- 				<img :src="preLoadImg" alt="" mode="widthFix" width="100%" @load="preImageLoad" v-show="false"> -->
-				<view class="list-left">
-					<view class="card" v-for="(item,index) in cardListLeft">
-						<img :src="item.cardImg" alt="" mode="widthFix" width="100%" @load="onImageLoad">
-						<view class="card-text">
-							<h2>{{item.cardTitle}}</h2>
-							<p>{{item.cardText}}</p>
-						</view>
-					</view>
-				</view>
-				<view class="list-right">
-					<view class="card" v-for="(item,index) in cardListRight" >
-						<img :src="item.cardImg" alt="" mode="widthFix" width="100%" @load="onImageLoad">
-						<view class="card-text">
-							<h2>{{item.cardTitle}}</h2>
-							<p>{{item.cardText}}</p>
-						</view>
-					</view>
+		<view class="list-right">
+			<view class="card" v-for="(item,index) in cardListRight" >
+				<img :src="item.cardImg" alt="" mode="widthFix" width="100%" @load="onImageLoad">
+				<view class="card-text">
+					<h2>{{item.cardTitle}}</h2>
+					<p>{{item.cardText}}</p>
 				</view>
 			</view>
-			<view class="noMore" v-if="showNoMore" >我也是有底线的！！！</view>
-		</scroll-view>
-		
-		<!-- <view class="noMore" v-if="showNoMore" >我也是有底线的！！！</view> -->
+		</view>
 	</view>
-</template>
+	<view class="noMore" v-if="showNoMore" >我也是有底线的！！！</view>
+	<!--瀑布流布局end-->
+</scroll-view>
+
 
 ```
 
 ```javascript
 <script>
-	import shareNavBar from "../../components/share-nav-bar.vue"
-
 	export default {
-		components: {shareNavBar},
 		data() {
 			return {
-				inputdefault:'',
-				SearchData:{
-					value:'nihao'
-				},
-				
 				allcardList:[{
 					cardImg:"../../static/image/sample/sample1.jpg",
 					cardTitle:"我是第一张图片",
@@ -188,17 +143,6 @@ v-bind:style="{height:contentH+'px'}"
 			this.waterfall();			//初始化瀑布流
 		},
 		methods: {
-			SearchClear(){
-				this.inputdefault="";
-			},
-			SearchConfirm(){
-				console.log("搜索："+this.SearchData.value);
-			},
-			onKeyInput: function(event) {
-				this.SearchData.value = event.target.value
-			},
-			
-			
 			onImageLoad: function(e){
 
 				let divWidth = 345;			//实际显示的单栏宽度，345upx
@@ -266,16 +210,20 @@ v-bind:style="{height:contentH+'px'}"
 					}else{
 						this.showNoMore = true;				//没有新数据就显示到底了
 					}
-					
-					
 				}
-				
 			}
 		}
 	}
 </script>
-
 ```
+
+# 实现效果：
+![enter image description here](https://raw.githubusercontent.com/chaoqunzhan/vue-es6-dataStructure/master/interview/Vue.js/images/waterfall1.JPG)
+![enter image description here](https://raw.githubusercontent.com/chaoqunzhan/vue-es6-dataStructure/master/interview/Vue.js/images/waterfall2.JPG)
+
+![enter image description here](https://raw.githubusercontent.com/chaoqunzhan/vue-es6-dataStructure/master/interview/Vue.js/images/waterfall3.JPG)
+最后可以发现，总共12张图片，加载了3次，所以有3次loadmore。
+到此还是很不错的（得意脸），欢迎交流改进！！！
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMzI3MjM3MjQ5XX0=
+eyJoaXN0b3J5IjpbMjA1NjUyMDAxOV19
 -->
