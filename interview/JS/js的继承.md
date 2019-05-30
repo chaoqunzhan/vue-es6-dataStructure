@@ -58,8 +58,109 @@ alert(Tom.num);	//"1,2,3,4"
 所以一般我们不会单独使用原型链。
 
 
-## 1.6.借用构造函数
+# 2.借用构造函数
+
 为了解决上面1.5中出现的问题，借用构造函数的技术被大佬们广泛使用。
+```javascript
+function Animal(){
+	this.num = ["1", "2", "3"];
+}
+function Person(){
+	Animal.call(this);	//继承Animal
+}
+
+var Jack = new Person();	//生成Jack实例
+Jack.num.push("4");
+alert(Jack.num);	//"1,2,3,4"
+
+var Tom = new Person();	//生成新的Tom实例
+alert(Tom.num);	//"1,2,3"
+```
+
+在这个例子中相比于1.5例子的区别就一句代码`Animal.call(this);`通过使用`call()`或者`apply()/bind()`方法在新创建的`Person`的实例中调用了`Animal`构造函数，从而实现属性的继承，而且实例之间的属性不相关联。
+
+**传递参数：**
+```javascript
+function Animal(age){
+	this.age= age;
+}
+function Person(){
+	Animal.call(this,"18");	//继承Animal
+}
+
+var Jack = new Person();	//生成Jack实例
+alert(Jack.age);	//"18"
+```
+**构造函数的问题：**
+构造函数的弊端是方法都在构造函数中定义，函数的复用就很难实现了，这也就跟我们使用继承的目的冲突了，因此构造函数也是很少单独使用的。所以要来学习一下，下面的几种继承方式。
+
+# 3.组合继承
+组合继承也叫伪经典继承，就和将原型链和借用构造函数技术结合在一起的继承。基本的思路是：使用原型链实现对原型属性和方法的继承，通过借用构造函数来实现对实例属性的继承。                                   
+```javascript
+function Animal(name){
+	this.name= name;
+	this.num = ["1", "2", "3"];
+}
+Animal.prototype.sayName = function(){
+	alert(this,name);
+};
+
+function Person(name,age){
+	Animal.call(this,name);		//继承Animal的属性
+	this.age = age;
+}
+Person.prototype = new Animal();	//继承Animal的方法
+Person.prototype.constructor = Animal;
+Person.prototype.sayAge = function(){
+	alert(this.age);
+};
+
+var Jack = new Person("Jack",18);	//生成Jack实例
+Jack.num.push("4");
+alert(Jack.num);	//"1,2,3,4"
+alert(Jack.sayName);	//"Jack"
+alert(Jack.sayAge);		//18
+
+var Tom = new Person("Tom",20);		//生成新的Tom实例
+alert(Tom.num);		//"1,2,3"
+alert(Tom.sayName);		//"Tom"
+alert(Tom.sayAge);		//20
+```                    
+
+# 4.原型式继承
+```javascript
+function object(o){
+	function F(){}
+	F.prototype = o;
+	return new F();
+}
+```
+在object中创建一个临时类型的新实例，复制并返回传入的对象。在ES5中对这种继承进行了规范化，引入了`Object.create( )`。
+这种继承其实不是很实用，作简单了解就好。
+
+# 5.寄生式继承
+寄生式继承的思路和上面的原型式继承很像，或者可以说是在原型式继承的基础上进行了改进。
+```javascript
+function createPara(para){
+	var clone = object(para);	
+	clone.sayHi = function(){
+		alert("Hi")
+	}
+	return clone;
+}
+
+var Person = {
+	name:"Jack";
+	friends:["a","b","c"];
+}
+var anotherPerson = createPara(Person);
+anotherPerson.sayHi;	//Hi
+```
+在使用寄生继承对对象添加函数的时候，由于函数是不可复用的，所以这种方法的效率很低，一般也不单独使用。
+
+# 6.寄生组合式继承
+
+                                                                                                                                                    
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTExMjI1MDE1NDUsMTQwNjE0MzUwN119
+eyJoaXN0b3J5IjpbMTIwMzk3MzU4NywxNDA2MTQzNTA3XX0=
 -->
