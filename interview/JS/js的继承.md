@@ -159,8 +159,40 @@ anotherPerson.sayHi;	//Hi
 在使用寄生继承对对象添加函数的时候，由于函数是不可复用的，所以这种方法的效率很低，一般也不单独使用。
 
 # 6.寄生组合式继承
+所谓的寄生组合继承，就是通过借用构造函数来继承属性，通过原型链来继承方法。本质上就是使用寄生式继承来继承超类型的原型，再将结果指定给子类型的原型。
+```javascript
 
-                                                                                                                                                    
+function inheritPrototype(subType, superType){
+    var prototype = object(superType.prototype); //创建对象的副本
+    prototype.constructor = subType; //为副本增加constructor属性
+    subType.prototype = prototype; //指定对象，将新创建的对象赋值给子类型
+}
+
+function Animal(name){
+	this.name = name;
+	this.friends = ["a","b","c"];
+}
+
+Animal.prototype.sayName = function(){
+	alert("this.name")
+};
+
+function Person(name,age){
+	Animal.call(this,name);		//使用借用构造函数来继承属性
+	this.age = age;
+}
+
+inheritPrototype(Person,Animal);   //使用寄生式继承方法
+Person.prototype.sayAge = function(){	//添加新方法
+	alert(this.age);
+}
+```       
+
+寄生组合式继承是引用类型最理想的继承方式，所以也是我们最需要掌握的知识点。                    
+
+# 总结：
+目前使用最多的是组合继承，最理想的是寄生组合式继承，而ES6中出现了Class继承也是一种相当方便使用的继承方式。Class继承将在下一篇文章中学习。。。
+                                                                                                                       
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTIwMzk3MzU4NywxNDA2MTQzNTA3XX0=
+eyJoaXN0b3J5IjpbNDM0NTAxNDE0LDE0MDYxNDM1MDddfQ==
 -->
