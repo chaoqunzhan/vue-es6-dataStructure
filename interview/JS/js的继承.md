@@ -9,10 +9,10 @@
 ![enter image description here](https://qiniu.cqz21.top/%E5%8E%9F%E5%9E%8B%E9%93%BE1.JPG)
 
 原型链就是在上面的基础上，让原型对象`Person Prototype`等于另一个实例（`Animal`），换句话说就是`Person Prototype`作为`Animal`的实例(`Person.prototype = new Animal()`)，以此下去就形成所谓的原型链。
-![enter image description here](https://qiniu.cqz21.top/%E5%8E%9F%E5%9E%8B%E9%93%BE2.JPG)
+![enter image description here](https://qiniu.cqz21.top/%E5%8E%9F%E5%9E%8B2.JPG)
 ## 1.2.默认的原型
 事实上所有的引用类型都是默认继承了Object，而这也是通过原型链实现的继承，所以在1.1中的例子需要再加上默认的这一环。
-![enter image description here](https://qiniu.cqz21.top/%E5%8E%9F%E5%9E%8B%E9%93%BE3.JPG)
+![enter image description here](https://qiniu.cqz21.top/%E5%8E%9F%E5%9E%8B3.JPG)
 ## 1.3.确定原型和实例的关系
 
 **1.3.1. 使用instanceof操作符：**
@@ -194,5 +194,5 @@ Person.prototype.sayAge = function(){	//添加新方法
 目前使用最多的是组合继承，最理想的是寄生组合式继承，而ES6中出现了Class继承也是一种相当方便使用的继承方式。Class继承将在下一篇文章中学习。。。
                                                                                                                        
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNDM0NTAxNDE0LDE0MDYxNDM1MDddfQ==
+eyJoaXN0b3J5IjpbLTY3NTk3MTQ2NiwxNDA2MTQzNTA3XX0=
 -->
