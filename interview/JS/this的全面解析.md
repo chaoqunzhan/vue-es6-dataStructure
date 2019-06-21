@@ -214,7 +214,25 @@ o.foo(); // 3
 # 五、this的词法
 我们之前介绍的四条规则已经可以包含所有正常的函数。但是ES6 中介绍了一种无法使用这些规则的特殊函数类型：**箭头函数**。箭头函数不使用`this` 的四种标准规则，而是根据外层（函数或者全局）作用域来决定`this`。
 
-
+我们来看看箭头函数的词法作用域：
+```javascript
+function foo() {
+	// 返回一个箭头函数
+	return (a) => {
+	//this 继承自foo()
+	console.log( this.a );
+	};
+}
+var obj1 = {
+	a:2
+};
+var obj2 = {
+	a:3
+};
+var bar = foo.call( obj1 );
+bar.call( obj2 ); // 2, 不是3 ！
+```
+`foo()` 内部创建的箭头函数会捕获调用时`foo()` 的`this`。由于`foo()` 的`this` 绑定到`obj1`，`bar`（引用箭头函数）的`this` 也会绑定到`obj1`，箭头函数的绑定无法被修改。（`new` 也不行！）
 
 
 
@@ -229,5 +247,5 @@ o.foo(); // 3
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE2MjA1NDYyMDldfQ==
+eyJoaXN0b3J5IjpbLTQ5NTIwNTE4MV19
 -->
