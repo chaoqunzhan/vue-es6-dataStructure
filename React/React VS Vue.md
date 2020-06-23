@@ -23,3 +23,6 @@ Virtual DOM是一个映射真实DOM的JavaScript对象，如果需要改变任�
 **diff算法：**
 
 比较只会在**同层级进行**, 不会跨层级比较，比较顺序按**先序遍历**，把不同的打上标记，放到数组里面去，统一交给patch处理。
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbMTAzNTgyNzc2Ml19
+-->
